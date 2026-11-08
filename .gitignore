@@ -1,0 +1,6 @@
+*.hdf5
+checkpoints/
+.venv/
+__pycache__/
+temp/
+.vscode/
