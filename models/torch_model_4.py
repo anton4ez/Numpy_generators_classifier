@@ -32,7 +32,7 @@ class LSTM_Net(nn.Module):
         )
         
         self.linear = nn.Sequential(
-            nn.Linear(hidden_size * 2, hidden_size),
+            nn.Linear(hidden_size * 4, hidden_size),
             nn.GELU(),
             nn.Linear(hidden_size, num_classes)
         )
@@ -47,6 +47,10 @@ class LSTM_Net(nn.Module):
 
         lstm_out, _ = self.lstm(features)
 
+        max_hiddens = torch.max(lstm_out, dim=1).values
         mean_hiddens = torch.mean(lstm_out, dim=1)
+        std_hiddens = torch.std(lstm_out, dim=1, unbiased=False)
 
-        return self.linear(mean_hiddens)
+        pooled = torch.cat([mean_hiddens, max_hiddens, std_hiddens], dim=1)
+
+        return self.linear(pooled)

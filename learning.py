@@ -105,6 +105,8 @@ def evaluate(
             x_test = x_test.to(device, non_blocking=True).float()
             y_test = y_test.to(device, non_blocking=True)
 
+            x_test = (x_test - 127.5) / 127.5
+
             predict = model(x_test)
             total_loss += criterion(predict, y_test).item()
             f1_metric.update(predict, y_test)
